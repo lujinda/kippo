@@ -1,3 +1,4 @@
+#coding:utf8
 # Copyright (c) 2009-2014 Upi Tamminen <desaster@gmail.com>
 # See the COPYRIGHT file for more information
 
@@ -26,7 +27,7 @@ class HoneyPotSSHUserAuthServer(userauth.SSHUserAuthServer):
         userauth.SSHUserAuthServer.serviceStarted(self)
         self.bannerSent = False
 
-    def sendBanner(self):
+    def sendBanner(self): # 发送欢迎信息
         if self.bannerSent:
             return
         cfg = config()

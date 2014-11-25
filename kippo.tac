@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#coding:utf8
 # Copyright (c) 2009 Upi Tamminen <desaster@gmail.com>
 # See the COPYRIGHT file for more information
 
@@ -14,9 +16,9 @@ from twisted.application import internet, service
 from twisted.cred import portal
 from twisted.conch.ssh import factory, keys
 
-if os.name == 'posix' and os.getuid() == 0:
-    print 'ERROR: You must not run kippo as root!'
-    sys.exit(1)
+#if os.name == 'posix' and os.getuid() == 0:  # 用来判断是否是以root用户登录,如果是的话，则不允许执行.
+#    print 'ERROR: You must not run kippo as root!'
+#    sys.exit(1)
 
 if not os.path.exists('kippo.cfg'):
     print 'ERROR: kippo.cfg is missing!'
@@ -41,20 +43,20 @@ factory.privateKeys = {'ssh-rsa': keys.Key.fromString(data=rsa_privKeyString),
 
 cfg = config()
 if cfg.has_option('honeypot', 'ssh_addr'):
-    ssh_addr = cfg.get('honeypot', 'ssh_addr')
+    ssh_addr = cfg.get('honeypot', 'ssh_addr') # 多个地址可以用空格相隔
 else:
     ssh_addr = '0.0.0.0'
 
 application = service.Application('honeypot')
 for i in ssh_addr.split():
     service = internet.TCPServer(
-        int(cfg.get('honeypot', 'ssh_port')), factory,
+        int(cfg.get('honeypot', 'ssh_port')), factory, # 监听多个地址
         interface=i)
     service.setServiceParent(application)
 
 if cfg.has_option('honeypot', 'interact_enabled') and \
         cfg.get('honeypot', 'interact_enabled').lower() in \
-        ('yes', 'true', 'on'):
+        ('yes', 'true', 'on'):  # 确定是否要开启telnet后台交互
     iport = int(cfg.get('honeypot', 'interact_port'))
     from kippo.core import interact
     from twisted.internet import protocol

@@ -46,6 +46,11 @@ class command_cd(HoneyPotCommand):
         self.honeypot.cwd = newpath
 commands['cd'] = command_cd
 
+class command_hi(HoneyPotCommand):
+    def call(self):
+        self.writeln("hi")
+commands['hi'] = command_hi
+
 class command_rm(HoneyPotCommand):
     def call(self):
         recursive = False
